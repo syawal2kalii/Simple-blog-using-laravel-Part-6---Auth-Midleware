@@ -28,7 +28,7 @@
                 <p class="lead">{{$article->content}}</p>
                 <hr>
 
-                    <a type="button"  class="btn btn-outline-primary">Edit</a>
+                    <a type="button" href="{{route("article.edit",$article)}}" class="btn btn-outline-primary">Edit</a>
                     <a type="button" href="{{route("article.destroy",$article)}}" class="btn btn-outline-danger">hapus</a>
 
 

@@ -6,6 +6,7 @@ use App\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
@@ -80,7 +81,8 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        $cat=['politik','hiburan','education'];//pengganti database
+        return view('edit',compact('article','cat'));
     }
 
     /**
@@ -92,7 +94,21 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        //
+        // validate form
+        $data = request()->validate([
+            'title'=> 'required|max:255',
+            'category'=> 'required',
+            'content'=> 'required',
+            'imgurl' => 'mimes:jpeg,bmp,png,jpg',
+        ]);
+        $data['imgurl'] = Storage::putFile('public/photos',$request->file('imgurl'));
+        $data['slug'] =Str::slug(request('title').'-'.Str::random(10));
+
+        if(!empty(request('imgurl'))){
+            Storage::delete($article->imgurl);
+        }
+        $article->update($data);
+        return redirect()->route('article');
     }
 
     /**
@@ -111,4 +127,5 @@ class ArticleController extends Controller
     public function detail(Article $article){
         return view("detail",compact("article"));
     }
+
 }
