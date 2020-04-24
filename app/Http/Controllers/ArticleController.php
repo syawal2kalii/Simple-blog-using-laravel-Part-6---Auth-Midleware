@@ -15,6 +15,12 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $articles=Article::all();
@@ -57,7 +63,7 @@ class ArticleController extends Controller
             'content'=> $request->contentt,
             'imgurl'=> Storage::putFile('public/photos',$request->file("imgurl")),
             'slug' => \Str::slug($request->title).'-'.\Str::random(10),
-            'user_id'=>1,
+            'user_id'=>Auth::user()->id,
         ]);
         return redirect()->route("article.form");
     }
